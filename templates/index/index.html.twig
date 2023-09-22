@@ -10,7 +10,9 @@
 
 	<div>
 		{% for article in articles %}
-			<p>{{ article.title }}</p>
+			<p>
+				<a href="{{ path("app_article", { "id": article.id }) }}">{{ article.title }}</a>
+			</p>
 		{% else %}
 			<div>Aucun article trouvé</div>
 		{% endfor %}

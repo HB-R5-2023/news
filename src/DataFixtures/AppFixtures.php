@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Entity\Tag;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -12,6 +13,7 @@ class AppFixtures extends Fixture
 {
   private const NB_ARTICLES = 120;
   private const NB_CATEGORIES = 15;
+  private const NB_TAGS = 35;
 
   public function load(ObjectManager $manager): void
   {
@@ -27,6 +29,16 @@ class AppFixtures extends Fixture
       $categories[] = $category;
     }
 
+    $tags = [];
+
+    for ($i = 0; $i < self::NB_TAGS; $i++) {
+      $tag = new Tag();
+      $tag->setName($faker->word());
+
+      $manager->persist($tag);
+      $tags[] = $tag;
+    }
+
     for ($i = 1; $i <= self::NB_ARTICLES; $i++) {
       $article = new Article();
       $article
@@ -38,6 +50,12 @@ class AppFixtures extends Fixture
         ->setCategory(
           $faker->randomElement($categories)
         );
+
+      $nbTags = $faker->numberBetween(1, 8);
+
+      for ($j = 0; $j < $nbTags; $j++) {
+        $article->addTag($faker->randomElement($tags));
+      }
 
       $manager->persist($article);
     }
